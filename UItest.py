@@ -5,9 +5,9 @@ import numpy as np
 class MouseTracker:
     def __init__(self):
         
-        fig, ax = plt.subplots()
-        plt.xlim([0,1])
-        plt.ylim([0,1])
+        fig, ax = plt.subplots() 
+        plt.xlim(0,1)
+        plt.ylim(0,1) 
         fig.subplots_adjust(bottom=0.2)
         button_ax = plt.axes([0.8, 0.05, 0.1, 0.075]) 
         button = Button(button_ax, 'boooton')
@@ -23,13 +23,25 @@ class MouseTracker:
         self.line=None
         self.button=button
         plt.show()
-
+    
     def on_button_clicked(self, event):
         print("Button clicked!")
+        for line in self.ax.lines:
+            line.remove()
+        for scatter in self.ax.collections:
+            scatter.remove()
+        self.reset_sketch()
+        self.fig.canvas.draw()
+
+
+
+  
 
     def reset_sketch(self):
         self.x = np.array([])
         self.y = np.array([])
+
+   
 
     def on_press(self, event):
         if event.inaxes != self.ax:
@@ -38,6 +50,7 @@ class MouseTracker:
             self.pressed = True
             self.x=np.append(self.x,[event.xdata])
             self.y=np.append(self.y,[event.ydata])
+
         elif event.button == 3:
             self.ax.lines[-1].remove()
             self.fig.canvas.draw()
@@ -60,6 +73,8 @@ class MouseTracker:
         if self.pressed:
             self.x=np.append(self.x,[event.xdata])
             self.y=np.append(self.y,[event.ydata])
+            self.ax.scatter(self.x[-1],self.y[-1])
+            self.fig.canvas.draw()
     
     
 
